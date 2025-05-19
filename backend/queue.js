@@ -14,9 +14,6 @@ const connection = new IORedis({
 
 const userQueue = new Queue('user-import', { connection });
 
-
-
-// Store job IDs in memory (for simplicity)
 let jobIds = [];
 
 // Add a job and store its ID
@@ -27,9 +24,9 @@ const addJob = async (name, data) => {
 };
 
 // Get all job IDs
-router.get('/jobs', (req, res) => {
-    res.json({ jobIds });
-});
+// router.get('/jobs', (req, res) => {
+//     res.json({ jobIds });
+// });
 
 // Get status of a specific job
 router.get('/job-status/:id', async (req, res) => {
@@ -64,7 +61,6 @@ router.get('/job-status/:id', async (req, res) => {
     }
 });
 
-// Clear all jobs
 router.delete('/jobs', async (req, res) => {
     try {
         await userQueue.obliterate();

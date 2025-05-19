@@ -4,7 +4,6 @@ const path = require('path');
 const mysql = require('mysql2/promise');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-// Create a direct database connection
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
@@ -18,7 +17,6 @@ const connection = new IORedis({
     maxRetriesPerRequest: null
 })
 
-//each worker receives a chunk
 const userWorker = new Worker('user-import', async (job) => {
     console.log('Processing job:', job.id, 'Range:', job.data.range);
     const users = job.data.users;
@@ -29,7 +27,6 @@ const userWorker = new Worker('user-import', async (job) => {
         throw new Error('Invalid job data format');
     }
 
-    // Track successful and failed records
     const results = {
         total: users.length,
         successful: [],
@@ -40,23 +37,19 @@ const userWorker = new Worker('user-import', async (job) => {
     try {
         console.log(`Preparing to insert ${users.length} users from range ${range}`);
         
-        // Process each user individually to track successes and failures
         for (let i = 0; i < users.length; i++) {
             const user = users[i];
             try {
-                // Update progress
+
                 await job.updateProgress(Math.floor((i / users.length) * 100));
-                
-                // Insert the user
+             
                 await pool.query('INSERT INTO employee SET ?', user);
                 
-                // Record success
                 results.successful.push({
                     index: i,
                     data: user
                 });
             } catch (err) {
-                // Record failure
                 results.failed.push({
                     index: i,
                     data: user,
@@ -66,10 +59,8 @@ const userWorker = new Worker('user-import', async (job) => {
             }
         }
         
-        // Log summary
         console.log(`Job ${job.id} completed: ${results.successful.length} successful, ${results.failed.length} failed`);
         
-        // Return detailed results
         return {
             status: results.failed.length === 0 ? 'success' : 'partial',
             totalRecords: results.total,

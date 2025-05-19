@@ -102,14 +102,14 @@ const BulkUpload = () => {
                 <a 
                     href="/userUploadTemplate.xlsx"
                     download
-                    className="cursor-pointer border px-5 py-2 rounded hover:bg-gray-300"
+                    className="cursor-pointer border px-5 py-2 rounded hover:bg-blue-300 hover:text-white"
                 >
                     Download Template
                 </a>
 
                 <form onSubmit={handleUpload} encType="multipart/form-data" className="flex gap-3 items-center">
                     <div>
-                        <label htmlFor="inputFile" className="cursor-pointer border px-5 py-2 rounded hover:bg-gray-300">
+                        <label htmlFor="inputFile" className="cursor-pointer border px-5 py-2 rounded  hover:bg-blue-300 hover:text-white">
                             {file ? file.name : "Import Excel"}
                         </label>
                         <input 
@@ -123,7 +123,7 @@ const BulkUpload = () => {
                     <button
                         type="submit"
                         disabled={!file || isLoading}
-                        className="cursor-pointer border px-5 py-2 rounded hover:bg-gray-300"
+                        className="cursor-pointer border px-5 py-2 rounded  hover:bg-blue-300 hover:text-white"
                     >
                         {isLoading ? "Uploading..." : "Upload to DB"}
                     </button>
